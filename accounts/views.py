@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import UserSignupSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .serializers import CustomTokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -59,4 +58,30 @@ class LogoutView(APIView):
         response.delete_cookie('access_token')
         response.delete_cookie('refresh_token')
         return response
+    
+
+class RefreshTokenView(APIView):
+    def post(self, request):
+        refresh_token = request.COOKIES.get('refresh_token')
+
+        if refresh_token is None:
+            return Response({'detail': 'Refresh token missing'}, status=401)
+
+        try:
+            refresh = RefreshToken(refresh_token)
+            access_token = str(refresh.access_token)
+        except Exception:
+            return Response({'detail': 'Invalid refresh token'}, status=401)
+
+        response = Response({'message': 'Token refreshed'}, status=200)
+        response.set_cookie(
+            key='access_token',
+            value=access_token,
+            httponly=True,
+            secure=True,
+            samesite='Lax',
+            max_age=15 * 60,
+        )
+        return response
+
 
