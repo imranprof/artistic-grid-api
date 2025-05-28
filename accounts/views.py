@@ -65,15 +65,15 @@ class RefreshTokenView(APIView):
         refresh_token = request.COOKIES.get('refresh_token')
 
         if refresh_token is None:
-            return Response({'detail': 'Refresh token missing'}, status=401)
+            return Response({'detail': 'Refresh token missing'}, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
             refresh = RefreshToken(refresh_token)
             access_token = str(refresh.access_token)
         except Exception:
-            return Response({'detail': 'Invalid refresh token'}, status=401)
+            return Response({'detail': 'Invalid refresh token'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        response = Response({'message': 'Token refreshed'}, status=200)
+        response = Response({'message': 'Token refreshed'}, status=status.HTTP_200_OK)
         response.set_cookie(
             key='access_token',
             value=access_token,
