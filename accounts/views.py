@@ -4,8 +4,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import UserSignupSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import CustomTokenObtainPairSerializer
+from .serializers import CustomTokenObtainPairSerializer, UserSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
+from .models import User
 
 class SignupView(APIView):
     def post(self, request):
@@ -83,5 +84,15 @@ class RefreshTokenView(APIView):
             max_age=15 * 60,
         )
         return response
+
+
+# this user list for development purposes only
+class AllUsersView(APIView):
+    
+
+    def get(self, request):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
 
 
