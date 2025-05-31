@@ -7,6 +7,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomTokenObtainPairSerializer, UserSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User
+from rest_framework.permissions import IsAuthenticated
 
 class SignupView(APIView):
     def post(self, request):
@@ -94,5 +95,13 @@ class AllUsersView(APIView):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
+    
+#authorize user
+class MeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
