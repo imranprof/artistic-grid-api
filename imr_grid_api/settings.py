@@ -47,13 +47,14 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    
 ]
 
 #cors config
@@ -102,6 +103,7 @@ AUTH_USER_MODEL = 'accounts.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'accounts.authentication.CustomJWTAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
@@ -119,7 +121,7 @@ SIMPLE_JWT = {
     "AUTH_COOKIE_SECURE": True,                     # Use True in production (HTTPS)
     "AUTH_COOKIE_HTTP_ONLY": True,                  # Crucial for security
     "AUTH_COOKIE_PATH": "/",                        # Cookie path
-    "AUTH_COOKIE_SAMESITE": "Lax", 
+    "AUTH_COOKIE_SAMESITE": "None",                    # Use LAX in production (HTTPS)
 
 }
 
