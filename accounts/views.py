@@ -57,8 +57,8 @@ class LoginView(APIView):
 class LogoutView(APIView):
     def post(self, request):
         response = Response({"message": "Logged out"}, status=status.HTTP_200_OK)
-        response.delete_cookie('access_token')
-        response.delete_cookie('refresh_token')
+        response.delete_cookie('access_token',samesite='None')
+        response.delete_cookie('refresh_token',samesite='None')
         return response
     
 
@@ -81,7 +81,7 @@ class RefreshTokenView(APIView):
             value=access_token,
             httponly=True,
             secure=True,
-            samesite='Lax',
+            samesite='None',  #LAX for production
             max_age=15 * 60,
         )
         return response
