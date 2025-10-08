@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'accounts',
+    'imr_grid_api.apps.ImrGridApiConfig',
     'django_extensions',
     'corsheaders',
 ]
