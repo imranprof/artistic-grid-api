@@ -8,6 +8,7 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
         related_name="profile"
     )
+    name = models.CharField(max_length=255, blank=True)
     about = models.CharField(max_length=255, blank=True)
     avatar_url = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
