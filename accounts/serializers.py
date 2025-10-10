@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import User
+from imr_grid_api.models import Post, Profile
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
@@ -73,3 +74,22 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email']
+
+
+#for user profile show
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ["about", "avatar_url", "name"]
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    posts = serializers.SerializerMethodField()
+    profile = ProfileSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ["username", "email", "profile", "posts"]
+
+    def get_posts(self, obj):
+        posts = Post.objects.filter(user=obj, status="published").order_by("-created_at")
+        return [{"id": p.id, "title": p.title, "image_url": p.image_url} for p in posts]

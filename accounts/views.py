@@ -1,14 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import UserSignupSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import CustomTokenObtainPairSerializer, UserSerializer
+from .serializers import CustomTokenObtainPairSerializer, UserSerializer, UserProfileSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User
 from rest_framework.permissions import IsAuthenticated
 from imr_grid_api.models import Profile
+from rest_framework import generics
+
 
 class SignupView(APIView):
     def post(self, request):
@@ -108,3 +110,11 @@ class MeView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+#user profile views
+class UserProfileDetailView(generics.RetrieveAPIView):
+    serializer_class = UserProfileSerializer
+    lookup_field = "username"
+
+    def get_object(self):
+        username = self.kwargs["username"]
+        return get_object_or_404(User, username=username)
