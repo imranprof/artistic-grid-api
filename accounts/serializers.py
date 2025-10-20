@@ -88,7 +88,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["username", "email", "profile", "posts"]
+        fields = ["id", "username", "email", "profile", "posts"]
 
     def get_posts(self, obj):
         posts = Post.objects.filter(user=obj, status="published").order_by("-created_at")
